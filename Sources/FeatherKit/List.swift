@@ -17,7 +17,7 @@ public enum List {
     }
 
     /// Pagination information about the List
-    public enum Page {
+    public struct Page: Codable, Sendable {
 
         /// Default pagination values
         public enum Default {
@@ -31,44 +31,21 @@ public enum List {
             public static var offset: Int = 0
         }
 
-        /// Pagination info for the List requests
-        public struct Request: Codable, Sendable {
-            /// Limit query value
-            ///
-            /// Defaults ot the `Page.Default.limit` value if not present
-            public let limit: Int
-            /// Offset query value
-            ///
-            /// Defaults ot the `Page.Default.offset` value if not present
-            public let offset: Int
+        /// Limit query value
+        ///
+        /// Defaults ot the `Page.Default.limit` value if not present
+        public let limit: Int
+        /// Offset query value
+        ///
+        /// Defaults ot the `Page.Default.offset` value if not present
+        public let offset: Int
 
-            public init(
-                limit: Int? = nil,
-                offset: Int? = nil
-            ) {
-                self.limit = limit ?? Page.Default.limit
-                self.offset = offset ?? Page.Default.offset
-            }
-        }
-
-        /// Pagination response for the List requests
-        public struct Response: Codable, Sendable {
-            /// The page limit response
-            public let limit: Int
-            /// The page offset response
-            public let offset: Int
-            /// The number of total pages
-            public let count: Int
-
-            public init(
-                limit: Int,
-                offset: Int,
-                count: Int
-            ) {
-                self.limit = limit
-                self.offset = offset
-                self.count = count
-            }
+        public init(
+            limit: Int? = nil,
+            offset: Int? = nil
+        ) {
+            self.limit = limit ?? Default.limit
+            self.offset = offset ?? Default.offset
         }
     }
 
@@ -82,83 +59,39 @@ public enum List {
         }
     }
 
-    public struct Filter<T: Codable & Sendable>: Codable, Sendable {
-        /// The relationship between the filter query elements
-        public enum Relation: String, Codable, Sendable {
-            /// And relation
-            case and
-            /// Or relation
-            case or
-        }
-
-        public struct Query: Codable, Sendable {
-            public enum Method: String, Codable, Sendable {
-                case equals
-                case like
-            }
-
-            public let method: Method
-            public let key: T
-            public let value: String
-
-            public init(method: Method, key: T, value: String) {
-                self.method = method
-                self.key = key
-                self.value = value
-            }
-        }
-
-        public let relation: Relation
-        public let query: [Query]
-
-        public init(relation: Relation = .and, query: [Query] = []) {
-            self.relation = relation
-            self.query = query
-        }
-    }
-
-    public struct Request<
-        S: Codable & Sendable,
-        F: Codable & Sendable
+    public struct Query<
+        S: Codable & Sendable
     >: Codable, Sendable {
-        public let page: Page.Request
-        public let filter: Filter<F>
-        public let sort: [Sort<S>]
+        public let page: Page
+        public let search: String?
+        public let sort: S?
+        public let order: Order?
 
         public init(
-            page: Page.Request = .init(),
-            sort: [Sort<S>] = [],
-            filter: Filter<F> = .init()
+            page: List.Page,
+            search: String? = nil,
+            sort: S? = nil,
+            order: List.Order? = nil
         ) {
             self.page = page
-            self.filter = filter
+            self.search = search
             self.sort = sort
+            self.order = order
         }
     }
 
-    public struct Response<
+    public struct Result<
         I: Codable & Sendable,
-        S: Codable & Sendable,
-        F: Codable & Sendable
+        S: Codable & Sendable
     >: Codable, Sendable {
         public let items: [I]
         public let count: Int
-        public let page: Page.Response
-        public let sort: [Sort<S>]
-        public let filter: Filter<F>
-
-        public init(
-            items: [I],
-            count: Int,
-            page: Page.Response,
-            sort: [Sort<S>],
-            filter: Filter<F>
-        ) {
+        public let query: Query<S>
+        
+        public init(items: [I], count: Int, query: Query<S>) {
             self.items = items
             self.count = count
-            self.page = page
-            self.sort = sort
-            self.filter = filter
+            self.query = query
         }
     }
 }
