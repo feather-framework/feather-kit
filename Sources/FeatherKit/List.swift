@@ -24,28 +24,28 @@ public enum List {
             /// Default page limit value
             ///
             /// Default value: 50
-            public static var limit: Int = 50
+            public static var size: Int = 50
             /// Default page offset value
             ///
             /// Default value: 0
-            public static var offset: Int = 0
+            public static var index: Int = 0
         }
 
         /// Limit query value
         ///
-        /// Defaults ot the `Page.Default.limit` value if not present
-        public let limit: Int
+        /// Defaults ot the `Page.Default.size` value if not present
+        public let size: Int
         /// Offset query value
         ///
-        /// Defaults ot the `Page.Default.offset` value if not present
-        public let offset: Int
+        /// Defaults ot the `Page.Default.index` value if not present
+        public let index: Int
 
         public init(
-            limit: Int? = nil,
-            offset: Int? = nil
+            size: Int? = nil,
+            index: Int? = nil
         ) {
-            self.limit = limit ?? Default.limit
-            self.offset = offset ?? Default.offset
+            self.size = size ?? Default.size
+            self.index = index ?? Default.index
         }
     }
 
@@ -87,7 +87,7 @@ public enum List {
         public let items: [I]
         public let count: Int
         public let query: Query<S>
-        
+
         public init(items: [I], count: Int, query: Query<S>) {
             self.items = items
             self.count = count
