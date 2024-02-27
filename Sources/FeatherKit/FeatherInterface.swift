@@ -14,3 +14,15 @@ public protocol FeatherInterface: Sendable {
         _ block: (() async throws -> T)
     ) async throws -> T
 }
+
+extension FeatherInterface {
+
+    @discardableResult
+    public func auth<T>(
+        _ user: ACLInterface,
+        _ block: (() async throws -> T)
+    ) async throws -> T {
+        try await ACL.authenticate(user, block)
+    }
+}
+

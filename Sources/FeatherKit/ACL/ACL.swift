@@ -57,31 +57,31 @@ extension ACLInterface {
 
 public enum ACL {
 
-    struct GuestUser: ACLInterface {
-
-        public func hasRole(
-            _ key: String
-        ) async throws -> Bool { false }
-
-        public func hasPermission(
-            _ key: String
-        ) async throws -> Bool { false }
-
-        public func hasAccess(
-            _ key: String,
-            userInfo: [String: Any]
-        ) async throws -> Bool { false }
-    }
+//    struct GuestUser: ACLInterface {
+//
+//        public func hasRole(
+//            _ key: String
+//        ) async throws -> Bool { false }
+//
+//        public func hasPermission(
+//            _ key: String
+//        ) async throws -> Bool { false }
+//
+//        public func hasAccess(
+//            _ key: String,
+//            userInfo: [String: Any]
+//        ) async throws -> Bool { false }
+//    }
 
     // MARK: -
 
-    package struct AuthenticatedUser: ACLInterface {
+    public struct AuthenticatedUser: ACLInterface {
 
-        package let accountId: String
-        package let roleKeys: [String]
-        package let permissionKeys: [String]
+        public let accountId: String
+        public let roleKeys: [String]
+        public let permissionKeys: [String]
 
-        package init(
+        public init(
             accountId: String,
             roleKeys: [String],
             permissionKeys: [String]
@@ -91,19 +91,19 @@ public enum ACL {
             self.permissionKeys = permissionKeys
         }
 
-        package func hasRole(
+        public func hasRole(
             _ key: String
         ) async throws -> Bool {
             roleKeys.contains(key)
         }
 
-        package func hasPermission(
+        public func hasPermission(
             _ key: String
         ) async throws -> Bool {
             permissionKeys.contains(key)
         }
 
-        package func hasAccess(
+        public func hasAccess(
             _ key: String,
             userInfo: [String: Any]
         ) async throws -> Bool {
