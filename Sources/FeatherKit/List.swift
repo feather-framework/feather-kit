@@ -49,7 +49,9 @@ public enum List {
         }
     }
 
-    public struct Sort<T: Codable & Sendable>: Codable, Sendable {
+    public struct Sort<
+        T: Codable & Sendable
+    >: Codable, Sendable {
         public let by: T
         public let order: Order
 
@@ -68,7 +70,7 @@ public enum List {
         public let order: Order?
 
         public init(
-            page: List.Page,
+            page: List.Page = .init(),
             search: String? = nil,
             sort: S? = nil,
             order: List.Order? = nil
@@ -88,7 +90,11 @@ public enum List {
         public let count: Int
         public let query: Query<S>
 
-        public init(items: [I], count: Int, query: Query<S>) {
+        public init(
+            items: [I],
+            count: Int,
+            query: Query<S>
+        ) {
             self.items = items
             self.count = count
             self.query = query
